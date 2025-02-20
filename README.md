@@ -52,11 +52,11 @@ body {
 2. **In a HTML style tag:**
 
 ```html
-<script>
+<style>
   body {
     background-colour: red;
   }
-</script>
+</style>
 ```
 
 3. **In an inline HTML style:**
