@@ -13,11 +13,11 @@ Fixes CSS to use non-bastardised spellings
 </div>
 <br/>
 
-Permits using English (traditional) spellings for CSS properties, rather then English (simplified).
+Permits using English (traditional) spellings for CSS properties, rather than English (simplified).
 
 Because this is implemented with a client-side script. You can use this to properise the CSS of any page.
 
-[Demo](https://codepen.io/OuterVale/pen/LEYGayK)
+[Demo on CodePen](https://codepen.io/OuterVale/pen/LEYGayK)
 
 ## Usage
 
@@ -45,7 +45,7 @@ britCSS.shutdown();
 
 ```css
 body {
-	background-colour: red;
+  background-colour: red;
 }
 ```
 
@@ -53,9 +53,9 @@ body {
 
 ```html
 <script>
-	body {
-	    background-colour: red;
-	}
+  body {
+    background-colour: red;
+  }
 </script>
 ```
 
