@@ -2,12 +2,12 @@
  * BritCSS - Use CSS properties with English (traditional) spelling
  *
  * This script allows you to write CSS the proper way. Tea and crumpets not included.
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 (function () {
 	let DEBUG = false;
-	const VERSION = "1.0.0";
+	const VERSION = "1.0.1";
 
 	function log(...args) {
 		if (DEBUG) {
@@ -46,10 +46,6 @@
 
 	Object.assign(britishToCSS, camelCaseMappings);
 
-	const valueRegexes = {
-		grey: /\bgrey\b/g,
-	};
-
 	const propertyRegexCache = {};
 
 	function getPropertyRegex(britishProp) {
@@ -69,8 +65,6 @@
 			result = result.replace(propRegex, `$1${britishToCSS[britishProp]}:`);
 		});
 
-		result = result.replace(valueRegexes.grey, "gray");
-
 		return result;
 	}
 
@@ -84,10 +78,6 @@
 			set(target, prop, value) {
 				try {
 					const cssProperty = britishToCSS[prop] || prop;
-
-					if (typeof value === "string") {
-						value = value.replace(valueRegexes.grey, "gray");
-					}
 
 					log(`Setting style property: ${prop} → ${cssProperty} with value: ${value}`);
 					target[cssProperty] = value;
@@ -325,16 +315,6 @@
 		 */
 		convertProperty: function (britishProp) {
 			return britishToCSS[britishProp] || britishProp;
-		},
-
-		/**
-		 * Convert British values in a CSS value string
-		 * @param {string} value - The CSS value string
-		 * @return {string} The converted value
-		 */
-		convertValue: function (value) {
-			if (typeof value !== "string") return value;
-			return value.replace(valueRegexes.grey, "gray");
 		},
 
 		/**
