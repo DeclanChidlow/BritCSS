@@ -22,7 +22,7 @@ Because this is implemented with a client-side script. You can use this to prope
 To use this script, simply include it in your HTML:
 
 ```html
-<script src="https://raw.githubusercontent.com/DeclanChidlow/BritCSS/refs/heads/main/britcss.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/DeclanChidlow/BritCSS/britcss.js"></script>
 ```
 
 To enter debug mode:
