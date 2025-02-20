@@ -2,12 +2,12 @@
  * BritCSS - Use CSS properties with English (traditional) spelling
  *
  * This script allows you to write CSS the proper way. Tea and crumpets not included.
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 (function () {
 	let DEBUG = false;
-	const VERSION = "1.0.1";
+	const VERSION = "1.0.2";
 
 	function log(...args) {
 		if (DEBUG) {
@@ -15,7 +15,7 @@
 		}
 	}
 
-	const britishToCSS = {
+	const britishPropsToCss = {
 		"colour": "color",
 		"background-colour": "background-color",
 		"border-colour": "border-color",
@@ -35,18 +35,24 @@
 		"colour-interpolation-filters": "color-interpolation-filters",
 	};
 
+	const britishValuesToCss = {
+		capitalise: "capitalize",
+		centre: "center",
+	};
+
 	const camelCaseMappings = {};
-	Object.keys(britishToCSS).forEach((key) => {
+	Object.keys(britishPropsToCss).forEach((key) => {
 		if (key.includes("-")) {
 			const camelKey = key.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-			const camelValue = britishToCSS[key].replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+			const camelValue = britishPropsToCss[key].replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 			camelCaseMappings[camelKey] = camelValue;
 		}
 	});
 
-	Object.assign(britishToCSS, camelCaseMappings);
+	Object.assign(britishPropsToCss, camelCaseMappings);
 
 	const propertyRegexCache = {};
+	const valueRegexCache = {};
 
 	function getPropertyRegex(britishProp) {
 		if (!propertyRegexCache[britishProp]) {
@@ -55,14 +61,26 @@
 		return propertyRegexCache[britishProp];
 	}
 
+	function getValueRegex(britishValue) {
+		if (!valueRegexCache[britishValue]) {
+			valueRegexCache[britishValue] = new RegExp(`(?<=:\\s*)${britishValue}(?=;|$)`, "gi");
+		}
+		return valueRegexCache[britishValue];
+	}
+
 	function convertBritishToCSS(css) {
 		if (!css || typeof css !== "string") return css;
 
 		let result = css;
 
-		Object.keys(britishToCSS).forEach((britishProp) => {
+		Object.keys(britishPropsToCss).forEach((britishProp) => {
 			const propRegex = getPropertyRegex(britishProp);
-			result = result.replace(propRegex, `$1${britishToCSS[britishProp]}:`);
+			result = result.replace(propRegex, `$1${britishPropsToCss[britishProp]}:`);
+		});
+
+		Object.keys(britishValuesToCss).forEach((britishValue) => {
+			const valueRegex = getValueRegex(britishValue);
+			result = result.replace(valueRegex, britishValuesToCss[britishValue]);
 		});
 
 		return result;
@@ -77,7 +95,7 @@
 		const proxy = new Proxy(elementStyle, {
 			set(target, prop, value) {
 				try {
-					const cssProperty = britishToCSS[prop] || prop;
+					const cssProperty = britishPropsToCss[prop] || prop;
 
 					log(`Setting style property: ${prop} → ${cssProperty} with value: ${value}`);
 					target[cssProperty] = value;
@@ -91,7 +109,7 @@
 				try {
 					if (prop === "_britishProxyApplied") return true;
 
-					const cssProperty = britishToCSS[prop] || prop;
+					const cssProperty = britishPropsToCss[prop] || prop;
 					return target[cssProperty];
 				} catch (e) {
 					console.error("[BritCSS] Error getting style property:", e);
@@ -314,7 +332,7 @@
 		 * @return {string} The standard CSS property name
 		 */
 		convertProperty: function (britishProp) {
-			return britishToCSS[britishProp] || britishProp;
+			return britishPropsToCss[britishProp] || britishProp;
 		},
 
 		/**
@@ -354,22 +372,40 @@
 		 * @param {string} cssProp - The standard CSS property name
 		 * @return {boolean} True if successful
 		 */
-		addCSSMapping: function (britishProp, cssProp) {
+		addPropertyMapping: function (britishProp, cssProp) {
 			if (!britishProp || !cssProp || typeof britishProp !== "string" || typeof cssProp !== "string") {
 				return false;
 			}
 
-			britishToCSS[britishProp] = cssProp;
+			britishPropsToCss[britishProp] = cssProp;
 
 			if (britishProp.includes("-")) {
 				const camelBritish = britishProp.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
 				const camelCSS = cssProp.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-				britishToCSS[camelBritish] = camelCSS;
+				britishPropsToCss[camelBritish] = camelCSS;
 
 				delete propertyRegexCache[britishProp];
 			}
 
-			log(`Added mapping: ${britishProp} → ${cssProp}`);
+			log(`Added property mapping: ${britishProp} → ${cssProp}`);
+			return true;
+		},
+
+		/**
+		 * Add a custom British to CSS value mapping
+		 * @param {string} britishProp - The British value name
+		 * @param {string} cssProp - The standard CSS value name
+		 * @return {boolean} True if successful
+		 */
+		addValueMapping: function (britishValue, cssValue) {
+			if (!britishValue || !cssValue || typeof britishValue !== "string" || typeof cssValue !== "string") {
+				return false;
+			}
+
+			britishValuesToCss[britishValue] = cssValue;
+			delete valueRegexCache[britishValue];
+
+			log(`Added value mapping: ${britishValue} → ${cssValue}`);
 			return true;
 		},
 
@@ -382,11 +418,27 @@
 		},
 
 		/**
-		 * Get a list of all British property mappings
+		 * Get a list of all British mappings
 		 * @return {Object} Object containing all mappings
 		 */
 		getMappings: function () {
-			return { ...britishToCSS };
+			return { ...britishPropsToCss };
+		},
+
+		/**
+		 * Get a list of all British property mappings
+		 * @return {Object} Object containing property mappings
+		 */
+		getPropMappings: function () {
+			return { ...britishPropsToCss };
+		},
+
+		/**
+		 * Get a list of all British value mappings
+		 * @return {Object} Object containing value mappings
+		 */
+		getValueMappings: function () {
+			return { ...britishValuesToCss };
 		},
 	};
 
