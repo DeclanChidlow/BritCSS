@@ -17,6 +17,8 @@ Permits using English (traditional) spellings for CSS properties, rather then En
 
 Because this is implemented with a client-side script. You can use this to properise the CSS of any page.
 
+[Demo](https://codepen.io/OuterVale/pen/LEYGayK)
+
 ## Usage
 
 To use this script, simply include it in your HTML:
