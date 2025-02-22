@@ -444,19 +444,19 @@
 
 	let observer = null;
 
-	function initialize() {
+	function initialise() {
 		try {
-			log("Initializing BritCSS v" + VERSION);
+			log("Initialising BritCSS v" + VERSION);
 			overrideInsertRule();
 			processStyleElements();
 			processInlineStyles();
 			processStylesheets();
 			observer = setupMutationObserver();
-			log("BritCSS initialized successfully");
+			log("BritCSS initialised successfully");
 
 			console.log("%cBritCSS v" + VERSION + " loaded - now supporting proper English spelling in your CSS!", "font-weight: bold;");
 		} catch (e) {
-			console.error("[BritCSS] Error initializing:", e);
+			console.error("[BritCSS] Error initialising:", e);
 		}
 	}
 
@@ -480,8 +480,8 @@
 	window.britCSS.shutdown = shutdown;
 
 	if (document.readyState === "loading") {
-		document.addEventListener("DOMContentLoaded", initialize);
+		document.addEventListener("DOMContentLoaded", initialise);
 	} else {
-		initialize();
+		initialise();
 	}
 })();
