@@ -38,6 +38,7 @@
 	const britishValuesToCss = {
 		capitalise: "capitalize",
 		centre: "center",
+		ifYouWouldBeSoKind: "important",
 	};
 
 	const camelCaseMappings = {};
