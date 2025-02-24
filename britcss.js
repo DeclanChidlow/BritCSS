@@ -2,12 +2,12 @@
  * BritCSS - Use CSS properties with English (traditional) spelling
  *
  * This script allows you to write CSS the proper way. Tea and crumpets not included.
- * @version 1.0.2
+ * @version 1.0.4
  */
 
 (function () {
 	let DEBUG = false;
-	const VERSION = "1.0.2";
+	const VERSION = "1.0.4";
 
 	function log(...args) {
 		if (DEBUG) {
@@ -33,12 +33,18 @@
 		"colour-adjust": "color-adjust",
 		"colour-interpolation": "color-interpolation",
 		"colour-interpolation-filters": "color-interpolation-filters",
+		"scroll-behaviour": "scroll-behavior",
+		"overscroll-behaviour": "overscroll-behavior",
+		"overscroll-behaviour-x": "overscroll-behavior-x",
+		"overscroll-behaviour-y": "overscroll-behavior-y",
+		"overscroll-behaviour-block": "overscroll-behavior-block",
+		"overscroll-behaviour-inline": "overscroll-behavior-inline",
+		"transition-behaviour": "transition-behavior",
 	};
 
 	const britishValuesToCss = {
 		"capitalise": "capitalize",
 		"centre": "center",
-		"if-you-would-be-so-kind": "important",
 	};
 
 	const camelCaseMappings = {};
@@ -69,10 +75,17 @@
 		return valueRegexCache[britishValue];
 	}
 
+    function convertPoliteImportant(css) {
+        if (!css || typeof css !== "string") return css;
+        return css.replace(/!if-you-would-be-so-kind(?=\s*[;}]|$)/g, "!important");
+    }
+
 	function convertBritishToCSS(css) {
 		if (!css || typeof css !== "string") return css;
 
 		let result = css;
+
+        result = convertPoliteImportant(result);
 
 		Object.keys(britishPropsToCss).forEach((britishProp) => {
 			const propRegex = getPropertyRegex(britishProp);
