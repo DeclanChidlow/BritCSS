@@ -2,12 +2,12 @@
  * BritCSS - Use CSS properties with English (traditional) spelling
  *
  * This script allows you to write CSS the proper way. Tea and crumpets not included.
- * @version 1.0.2
+ * @version 1.0.4
  */
 
 (function () {
 	let DEBUG = false;
-	const VERSION = "1.0.3";
+	const VERSION = "1.0.4";
 
 	function log(...args) {
 		if (DEBUG) {
@@ -75,10 +75,17 @@
 		return valueRegexCache[britishValue];
 	}
 
+    function convertPoliteImportant(css) {
+        if (!css || typeof css !== "string") return css;
+        return css.replace(/!if-you-would-be-so-kind(?=\s*[;}]|$)/g, "!important");
+    }
+
 	function convertBritishToCSS(css) {
 		if (!css || typeof css !== "string") return css;
 
 		let result = css;
+
+        result = convertPoliteImportant(result);
 
 		Object.keys(britishPropsToCss).forEach((britishProp) => {
 			const propRegex = getPropertyRegex(britishProp);
