@@ -36,9 +36,9 @@
 	};
 
 	const britishValuesToCss = {
-		capitalise: "capitalize",
-		centre: "center",
-		ifYouWouldBeSoKind: "important",
+		"capitalise": "capitalize",
+		"centre": "center",
+		"if-you-would-be-so-kind": "important",
 	};
 
 	const camelCaseMappings = {};
