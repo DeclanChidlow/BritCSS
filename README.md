@@ -17,7 +17,8 @@ Permits using English (traditional) spellings for CSS properties, rather than En
 
 Because this is implemented with a client-side script. You can use this to properise the CSS of any page.
 
-[Demo on CodePen](https://codepen.io/OuterVale/pen/LEYGayK)
+[Demo on CodePen](https://codepen.io/OuterVale/pen/LEYGayK) \
+[Coverage on Hackaday](https://hackaday.com/2025/03/13/britcss-write-css-with-british-english-spellings/)
 
 ## Usage
 
